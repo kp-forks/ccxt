@@ -6,10 +6,10 @@ namespace ccxt;
 
 public partial class Exchange
 {
-    public async Task<Dictionary<string, object>> FetchCurrenciesWs(Dictionary<string, object> parameters = null)
+    public async Task<Currencies> FetchCurrenciesWs(Dictionary<string, object> parameters = null)
     {
         var res = await this.fetchCurrenciesWs(parameters);
-        return ((Dictionary<string, object>)res);
+        return new Currencies(res);
     }
     public async Task<List<MarketInterface>> FetchMarkets(Dictionary<string, object> parameters = null)
     {
@@ -761,6 +761,11 @@ public partial class Exchange
         var res = await this.cancelOrderWs(id, symbol, parameters);
         return new Order(res);
     }
+    public async Task<List<Order>> CancelOrders(List<string> ids, string symbol = null, Dictionary<string, object> parameters = null)
+    {
+        var res = await this.cancelOrders(ids, symbol, parameters);
+        return ((IList<object>)res).Select(item => new Order(item)).ToList<Order>();
+    }
     public async Task<List<Order>> CancelOrdersWs(List<string> ids, string symbol = null, Dictionary<string, object> parameters = null)
     {
         var res = await this.cancelOrdersWs(ids, symbol, parameters);
@@ -786,7 +791,7 @@ public partial class Exchange
         var res = await this.cancelAllOrdersWs(symbol, parameters);
         return ((IList<object>)res).Select(item => new Order(item)).ToList<Order>();
     }
-    public async Task<Dictionary<string, object>> CancelUnifiedOrder(object order, Dictionary<string, object> parameters = null)
+    public async Task<Dictionary<string, object>> CancelUnifiedOrder(Order order, Dictionary<string, object> parameters = null)
     {
         var res = await this.cancelUnifiedOrder(order, parameters);
         return ((Dictionary<string, object>)res);
@@ -1336,7 +1341,6 @@ public class  Myokx: myokx { public Myokx(object args = null) : base(args) { } }
 public class  Ndax: ndax { public Ndax(object args = null) : base(args) { } }
 public class  Novadax: novadax { public Novadax(object args = null) : base(args) { } }
 public class  Oceanex: oceanex { public Oceanex(object args = null) : base(args) { } }
-public class  Okcoin: okcoin { public Okcoin(object args = null) : base(args) { } }
 public class  Okx: okx { public Okx(object args = null) : base(args) { } }
 public class  Okxus: okxus { public Okxus(object args = null) : base(args) { } }
 public class  Onetrading: onetrading { public Onetrading(object args = null) : base(args) { } }
